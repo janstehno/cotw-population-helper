@@ -14,6 +14,9 @@ class MapEditor {
         this.sampleButton.addEventListener("click", () => this.sampleData());
         this.mapImage.addEventListener("click", (e) => this.handleClick(e));
 
+        this.draggingIndex = null;
+        this.dragOffset = { x: 0, y: 0 };
+
         this.mapImage.addEventListener("load", () => {
             this.render();
         });
@@ -215,7 +218,51 @@ class MapEditor {
                 label.appendChild(numberLabel);
             });
 
-            label.onclick = () => this.editLabel(index);
+            let clicked = true;
+
+            label.onclick = () => {
+                if (clicked) this.editLabel(index);
+            };
+
+            label.onmousedown = (e) => {
+                e.preventDefault();
+                clicked = true;
+
+                this.draggingIndex = index;
+
+                const rect = this.mapImage.getBoundingClientRect();
+                const labelRect = label.getBoundingClientRect();
+
+                this.dragOffset = {
+                    x: e.clientX - labelRect.left,
+                    y: e.clientY - labelRect.top,
+                };
+
+                const onMouseMove = (moveEvent) => {
+                    clicked = false;
+
+                    if (this.draggingIndex === null) return;
+
+                    const x = (moveEvent.clientX - rect.left - this.dragOffset.x) / rect.width;
+                    const y = (moveEvent.clientY - rect.top - this.dragOffset.y) / rect.height;
+
+                    this.data[this.draggingIndex].x = Math.min(Math.max(x, 0), 1);
+                    this.data[this.draggingIndex].y = Math.min(Math.max(y, 0), 1);
+
+                    this.render();
+                };
+
+                const onMouseUp = () => {
+                    this.draggingIndex = null;
+                    this.saveData();
+                    window.removeEventListener("mousemove", onMouseMove);
+                    window.removeEventListener("mouseup", onMouseUp);
+                };
+
+                window.addEventListener("mousemove", onMouseMove);
+                window.addEventListener("mouseup", onMouseUp);
+            };
+
             div.appendChild(label);
         });
     }
