@@ -1,0 +1,122 @@
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+
+body {
+    font-family: "Work Sans", sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #060606;
+    color: #efefef;
+}
+
+#mapWrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.mapLabel {
+    font-weight: 600;
+    position: absolute;
+    background-color: #060606;
+    cursor: pointer;
+}
+
+.mapLabel span {
+    padding: 1px 2px;
+}
+
+#mapControls > * {
+    max-width: 400px;
+    width: 100%;
+}
+
+#summaryContainer {
+    background: #969696;
+    color: #060606;
+}
+
+#summaryBox {
+    max-width: 400px;
+    width: 100%;
+}
+
+.form-control::placeholder {
+    color: #969696;
+}
+
+input[type="file"]::file-selector-button {
+    background-color: #fefefe;
+    color: #060606;
+    border: none;
+}
+
+button {
+    padding: 5px 10px !important;
+}
+
+button.btn-outline-secondary:hover {
+    background-color: #1b1c1d;
+}
+
+#inputModal {
+    display: none;
+    top: 1rem;
+    z-index: 9999;
+    max-width: 400px;
+    width: 100%;
+}
+
+#inputModalContent {
+    background: #060606;
+    color: #efefef;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    top: 1rem;
+}
+
+#keyBindings {
+    font-size: 0.7rem;
+}
+
+#keyBindings strong {
+    background-color: #efefef;
+    color: #060606;
+    padding: 3px 8px;
+    margin-right: 5px;
+    border-radius: 5px;
+}
+
+#keyBindings strong#btn-g {
+    background-color: #2196f3;
+}
+
+#keyBindings strong#btn-s {
+    background-color: #e53935;
+}
+
+#keyBindings strong#btn-k {
+    background-color: #8bc34a;
+}
+
+#keyBindings strong#btn-d {
+    background-color: #9575cd;
+}
+
+#keyBindings strong#btn-h {
+    background-color: #ff4081;
+}
+
+#keyBindings strong#btn-r {
+    background-color: #ffc107;
+}
+
+#keyBindings strong#btn-default {
+    background-color: #78909c;
+}
+
+#appBanner{
+    background: rgba(0, 0, 0, 0.8);
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 10000;
+}

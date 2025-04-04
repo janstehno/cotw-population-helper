@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="cs">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="public/favicon.ico" type="image/x-icon" />
+        <title>COTW Population Helper</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.4/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-DQvkBjpPgn7RC31MCQoOeC9TI2kdqa4+BSgNMNj8v77fdC77Kj5zpWFTJaaAoMbC"
+            crossorigin="anonymous" />
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.4/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YUe2LzesAfftltw+PEaao2tjU/QATaW/rOitAq67e0CT0Zi2VVRL0oC4+gAaeBKu"
+            crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="public/style.css" />
+    </head>
+    <body>
+        <div id="mapContainer">
+            <div
+                id="appBanner"
+                class="px-3 py-2 d-flex flex-row column-gap-3 justify-content-between align-items-center">
+                <div
+                    class="d-flex flex-md-row flex-column column-gap-3 justify-content-center align-items-md-center align-items-start">
+                    <h1 class="m-0 text-warning small">COTW Population Helper</h1>
+                    <p class="m-0 small">© 2025 Jan Stehno. All rights reserved.</p>
+                </div>
+                <a
+                    class="text-warning text-decoration-none"
+                    href="https://github.com/janstehno/cotw-population-helper"
+                    target="_blank">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        fill="currentColor"
+                        class="bi bi-github"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"></path>
+                    </svg>
+                </a>
+            </div>
+            <div id="inputModal" class="position-fixed start-50 translate-middle-x px-3">
+                <div id="inputModalContent" class="d-flex flex-column align-self-center rounded p-3 w-100">
+                    <div id="keyBindings">
+                        <h3>Keybindings</h3>
+                        <ul class="list-unstyled d-flex flex-column gap-2">
+                            <li><strong>TAB</strong> Move through inputs, create new input</li>
+                            <li><strong>BACKSPACE</strong> Delete number, remove input</li>
+                            <li><strong>ESC</strong> Cancel</li>
+                            <li><strong>ENTER</strong> Save</li>
+                            <li>
+                                <strong id="btn-g">G</strong><strong id="btn-s">S</strong><strong id="btn-k">K</strong
+                                ><strong id="btn-d">D</strong><strong id="btn-h">H</strong
+                                ><strong id="btn-r">R</strong> Change color of the input
+                            </li>
+                            <li><strong id="btn-default">DEL</strong> Change color of the input to default</li>
+                        </ul>
+                    </div>
+                    <h3>Input</h3>
+                    <div
+                        id="inputFields"
+                        class="d-flex flex-wrap row-cols-6 justify-content-start align-items-center"></div>
+                    <div class="d-flex flex-row gap-1 align-items-center justify-content-center mt-3">
+                        <button id="saveBtn" class="btn btn-primary py-1">Save</button>
+                        <button id="cancelBtn" class="btn btn-dark py-1">Cancel</button>
+                        <button id="deleteBtn" class="btn btn-danger py-1">Delete</button>
+                    </div>
+                </div>
+            </div>
+            <div id="mapWrapper" class="positions-relative overflow-hidden">
+                <img id="mapImage" src="https://placehold.co/400" class="w-100 h-auto" alt="map" />
+            </div>
+            <div id="mapLabels" class="positions-relative overflow-hidden"></div>
+            <div id="mapControls" class="d-flex flex-column gap-2 justify-content-center align-items-center p-4">
+                <div class="mb-2">
+                    <h3>Map</h3>
+                    <select
+                        class="form-control bg-dark border-0 text-light"
+                        id="mapSelect"
+                        onchange="editor.changeMap(event)">
+                        <option value="maps/hhr.png">Hirschfelden Hunting Reserve</option>
+                        <option value="maps/lld.png">Layton Lake District</option>
+                        <option value="maps/mtnp.png">Medved Taiga National Park</option>
+                        <option value="maps/vs.png">Vurhonga Savanna</option>
+                        <option value="maps/pf.png">Parque Fernando</option>
+                        <option value="maps/yv.png">Yukon Valley</option>
+                        <option value="maps/ccgr.png">Cuatro Colinas Game Reserve</option>
+                        <option value="maps/tanp.png">Te Awaroa National Park</option>
+                        <option value="maps/rda.png">Rancho Del Arroyo</option>
+                        <option value="maps/map.png">Mississippi Acres Preserve</option>
+                        <option value="maps/rc.png">Revontuli Coast</option>
+                        <option value="maps/nem.png">New England Mountains</option>
+                        <option value="maps/eca.png">Emerald Coast Australia</option>
+                        <option value="maps/shr.png">Sundarpatan Hunting Reserve</option>
+                        <option value="maps/sp.png">Salzwiesen Park</option>
+                    </select>
+                </div>
+                <div>
+                    <h3>Data</h3>
+                    <input
+                        class="form-control bg-dark border-0 text-light"
+                        type="file"
+                        id="importFile"
+                        onchange="editor.importData(event)" />
+                </div>
+                <div class="d-wrap flex-column gap-2 align-items-center justify-content-center mb-2">
+                    <div class="w-100 col d-flex flex-row gap-2 align-items-center justify-content-center mb-2">
+                        <input
+                            type="text"
+                            id="fileName"
+                            class="col form-control bg-dark border-0 text-light"
+                            placeholder="File name" />
+                        <button id="exportButton" class="col btn btn-primary">Export data</button>
+                    </div>
+                    <button id="deleteButton" class="w-100 col btn btn-danger">Delete current data</button>
+                </div>
+                <div class="mb-5">
+                    <h3 class="m-0">Sample</h3>
+                    <p class="small mb-2 text-secondary">This will overwrite current data</p>
+                    <button id="sampleButton" class="w-100 col btn btn-outline-secondary">
+                        Load sample data<br />
+                    </button>
+                </div>
+            </div>
+        </div>
+        <script src="public/script.js"></script>
+    </body>
+</html>
