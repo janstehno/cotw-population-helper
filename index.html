@@ -47,19 +47,25 @@
                     <div id="keyBindings">
                         <h3>Keybindings</h3>
                         <ul class="list-unstyled d-flex flex-column gap-2">
-                            <li><strong>TAB</strong> Move through inputs, create new input</li>
-                            <li><strong>BACKSPACE</strong> Delete number, remove input</li>
-                            <li><strong>ESC</strong> Cancel</li>
-                            <li><strong>ENTER</strong> Save</li>
                             <li>
-                                <strong id="btn-g">G</strong><strong id="btn-s">S</strong><strong id="btn-k">K</strong
-                                ><strong id="btn-d">D</strong><strong id="btn-h">H</strong
-                                ><strong id="btn-r">R</strong> Change color of the input
+                                <span class="btn-default me-1">←</span><span class="btn-default">→</span> Move through inputs
                             </li>
-                            <li><strong id="btn-default">DEL</strong> Change color of the input to default</li>
+                            <li><span class="btn-default">BACKSPACE</span> Delete number</li>
+                            <li><span class="btn-default">ESC</span> Cancel</li>
+                            <li><span class="btn-default">ENTER</span> Save</li>
+                            <li>
+                                <p class="mb-1">Change the color of the input</p>
+                                <div class="d-flex flex-wrap gap-1">
+                                    <span class="btn-default">X - Unknown</span><span class="btn-g">G - Group</span
+                                    ><span class="btn-s">S - Solo</span><span class="btn-k">K - Keep</span
+                                    ><span class="btn-d">D - Done</span><span class="btn-h">H - Harvested</span
+                                    ><span class="btn-r">R - Rare</span>
+                                </div>
+                            </li>
                         </ul>
                     </div>
-                    <h3>Input</h3>
+                    <h3 class="m-0">Input</h3>
+                    <p class="small mb-2 text-secondary">Enter the difficulties of the animals</p>
                     <div
                         id="inputFields"
                         class="d-flex flex-wrap row-cols-6 justify-content-start align-items-center"></div>
@@ -74,55 +80,96 @@
                 <img id="mapImage" src="https://placehold.co/400" class="w-100 h-auto" alt="map" />
             </div>
             <div id="mapLabels" class="positions-relative overflow-hidden"></div>
-            <div id="mapControls" class="d-flex flex-column gap-2 justify-content-center align-items-center p-4">
-                <div class="mb-2">
-                    <h3>Map</h3>
-                    <select
-                        class="form-control bg-dark border-0 text-light"
-                        id="mapSelect"
-                        onchange="editor.changeMap(event)">
-                        <option value="maps/hhr.png">Hirschfelden Hunting Reserve</option>
-                        <option value="maps/lld.png">Layton Lake District</option>
-                        <option value="maps/mtnp.png">Medved Taiga National Park</option>
-                        <option value="maps/vs.png">Vurhonga Savanna</option>
-                        <option value="maps/pf.png">Parque Fernando</option>
-                        <option value="maps/yv.png">Yukon Valley</option>
-                        <option value="maps/ccgr.png">Cuatro Colinas Game Reserve</option>
-                        <option value="maps/tanp.png">Te Awaroa National Park</option>
-                        <option value="maps/rda.png">Rancho Del Arroyo</option>
-                        <option value="maps/map.png">Mississippi Acres Preserve</option>
-                        <option value="maps/rc.png">Revontuli Coast</option>
-                        <option value="maps/nem.png">New England Mountains</option>
-                        <option value="maps/eca.png">Emerald Coast Australia</option>
-                        <option value="maps/shr.png">Sundarpatan Hunting Reserve</option>
-                        <option value="maps/sp.png">Salzwiesen Park</option>
-                    </select>
-                </div>
-                <div>
-                    <h3>Data</h3>
-                    <input
-                        class="form-control bg-dark border-0 text-light"
-                        type="file"
-                        id="importFile"
-                        onchange="editor.importData(event)" />
-                </div>
-                <div class="d-wrap flex-column gap-2 align-items-center justify-content-center mb-2">
-                    <div class="w-100 col d-flex flex-row gap-2 align-items-center justify-content-center mb-2">
-                        <input
-                            type="text"
-                            id="fileName"
-                            class="col form-control bg-dark border-0 text-light"
-                            placeholder="File name" />
-                        <button id="exportButton" class="col btn btn-primary">Export data</button>
+            <div
+                id="mapInformation"
+                class="d-flex flex-sm-row flex-column row-cols-2 justify-content-center align-items-center">
+                <div id="mapLegend" class="col d-flex flex-column gap-2 justify-content-center align-items-center p-4">
+                    <div class="mb-2">
+                        <h3>Legend</h3>
+                        <ul class="list-unstyled d-flex flex-column gap-1">
+                            <li class="d-flex flex-row gap-2 align-items-center">
+                                <span class="legendColor btn-default rounded"></span>
+                                <span class="legendText">Default/Unknown</span>
+                            </li>
+                            <li class="d-flex flex-row gap-2 align-items-center">
+                                <span class="legendColor btn-g rounded"></span>
+                                <span class="legendText">Group</span>
+                            </li>
+                            <li class="d-flex flex-row gap-2 align-items-center">
+                                <span class="legendColor btn-s rounded"></span>
+                                <span class="legendText">Solo</span>
+                            </li>
+                            <li class="d-flex flex-row gap-2 align-items-center">
+                                <span class="legendColor btn-k rounded"></span>
+                                <span class="legendText">Keep until HM is done</span>
+                            </li>
+                            <li class="d-flex flex-row gap-2 align-items-center">
+                                <span class="legendColor btn-d rounded"></span>
+                                <span class="legendText">Done with HM</span>
+                            </li>
+                            <li class="d-flex flex-row gap-2 align-items-center">
+                                <span class="legendColor btn-h rounded"></span>
+                                <span class="legendText">Harvested in the current cycle</span>
+                            </li>
+                            <li class="d-flex flex-row gap-2 align-items-center">
+                                <span class="legendColor btn-r rounded"></span>
+                                <span class="legendText">Rare</span>
+                            </li>
+                        </ul>
                     </div>
-                    <button id="deleteButton" class="w-100 col btn btn-danger">Delete current data</button>
                 </div>
-                <div class="mb-5">
-                    <h3 class="m-0">Sample</h3>
-                    <p class="small mb-2 text-secondary">This will overwrite current data</p>
-                    <button id="sampleButton" class="w-100 col btn btn-outline-secondary">
-                        Load sample data<br />
-                    </button>
+                <div
+                    id="mapControls"
+                    class="col d-flex flex-column gap-2 justify-content-center align-items-center p-4">
+                    <div class="mb-2">
+                        <h3>Map</h3>
+                        <select
+                            class="form-control bg-dark border-0 text-light"
+                            id="mapSelect"
+                            onchange="editor.changeMap(event)">
+                            <option value="maps/hhr.png">Hirschfelden Hunting Reserve</option>
+                            <option value="maps/lld.png">Layton Lake District</option>
+                            <option value="maps/mtnp.png">Medved Taiga National Park</option>
+                            <option value="maps/vs.png">Vurhonga Savanna</option>
+                            <option value="maps/pf.png">Parque Fernando</option>
+                            <option value="maps/yv.png">Yukon Valley</option>
+                            <option value="maps/ccgr.png">Cuatro Colinas Game Reserve</option>
+                            <option value="maps/tanp.png">Te Awaroa National Park</option>
+                            <option value="maps/rda.png">Rancho Del Arroyo</option>
+                            <option value="maps/map.png">Mississippi Acres Preserve</option>
+                            <option value="maps/rc.png">Revontuli Coast</option>
+                            <option value="maps/nem.png">New England Mountains</option>
+                            <option value="maps/eca.png">Emerald Coast Australia</option>
+                            <option value="maps/shr.png">Sundarpatan Hunting Reserve</option>
+                            <option value="maps/sp.png">Salzwiesen Park</option>
+                        </select>
+                    </div>
+                    <div>
+                        <h3>Data</h3>
+                        <input
+                            class="form-control bg-dark border-0 text-light"
+                            type="file"
+                            id="importFile"
+                            onchange="editor.importData(event)" />
+                    </div>
+                    <div class="d-wrap flex-column gap-2 align-items-center justify-content-center mb-2">
+                        <div class="w-100 col d-flex flex-row gap-2 align-items-center justify-content-center mb-2">
+                            <input
+                                type="text"
+                                id="fileName"
+                                class="col form-control bg-dark border-0 text-light"
+                                placeholder="File name" />
+                            <button id="exportButton" class="col btn btn-primary">Export data</button>
+                        </div>
+                        <button id="deleteButton" class="w-100 col btn btn-danger">Delete current data</button>
+                    </div>
+                    <div class="mb-5">
+                        <h3 class="m-0">Sample</h3>
+                        <p class="small mb-2 text-secondary">This will overwrite current data</p>
+                        <button id="sampleButton" class="w-100 col btn btn-outline-secondary">
+                            Load sample data<br />
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

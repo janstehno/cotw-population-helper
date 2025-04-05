@@ -14,14 +14,15 @@ body {
 }
 
 .mapLabel {
-    font-weight: 600;
-    position: absolute;
+    display: flex;
     background-color: #060606;
     cursor: pointer;
 }
 
 .mapLabel span {
-    padding: 1px 2px;
+    font-weight: 600;
+    font-size: 0.8vw;
+    padding: 0.03vw 0.07vw;
 }
 
 #mapControls > * {
@@ -76,47 +77,51 @@ button.btn-outline-secondary:hover {
     font-size: 0.7rem;
 }
 
-#keyBindings strong {
-    background-color: #efefef;
+#keyBindings span {
     color: #060606;
     padding: 3px 8px;
-    margin-right: 5px;
     border-radius: 5px;
+    font-weight: 600;
 }
 
-#keyBindings strong#btn-g {
+.btn-g {
     background-color: #2196f3;
 }
 
-#keyBindings strong#btn-s {
+.btn-s {
     background-color: #e53935;
 }
 
-#keyBindings strong#btn-k {
+.btn-k {
     background-color: #8bc34a;
 }
 
-#keyBindings strong#btn-d {
-    background-color: #9575cd;
-}
-
-#keyBindings strong#btn-h {
-    background-color: #ff4081;
-}
-
-#keyBindings strong#btn-r {
-    background-color: #ffc107;
-}
-
-#keyBindings strong#btn-default {
+.btn-d {
     background-color: #78909c;
 }
 
-#appBanner{
+.btn-h {
+    background-color: #9575cd;
+}
+
+.btn-r {
+    background-color: #ffc107;
+}
+
+.btn-default {
+    background-color: #efefef;
+}
+
+#appBanner {
     background: rgba(0, 0, 0, 0.8);
     position: fixed;
     bottom: 0;
     right: 0;
     left: 0;
     z-index: 10000;
+}
+
+.legendColor {
+    width: 20px;
+    height: 20px;
 }

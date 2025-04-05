@@ -112,13 +112,51 @@ class MapEditor {
             input.addEventListener("keydown", (e) => {
                 const inputs = Array.from(fieldsContainer.querySelectorAll("input"));
 
-                if (e.key === "Tab" && input === inputs[inputs.length - 1]) {
+                if (e.key === "ArrowRight") {
                     e.preventDefault();
-                    const newField = createField();
-                    fieldsContainer.appendChild(newField);
-                    setTimeout(() => {
-                        newField.querySelector("input").focus();
-                    }, 0);
+                    const index = inputs.indexOf(input);
+
+                    const isLast = index === inputs.length - 1;
+                    const isEmpty = input.value === "";
+
+                    if (isEmpty && isLast) {
+                        return;
+                    }
+
+                    if (isEmpty && inputs.length > 1) {
+                        wrapper.remove();
+                        const newInputs = Array.from(fieldsContainer.querySelectorAll("input"));
+                        const next = newInputs[Math.min(index, newInputs.length - 1)];
+                        if (next) next.focus();
+                        return;
+                    }
+
+                    if (isLast) {
+                        const newField = createField();
+                        fieldsContainer.appendChild(newField);
+                        setTimeout(() => {
+                            newField.querySelector("input").focus();
+                        }, 0);
+                    } else {
+                        inputs[index + 1]?.focus();
+                    }
+                }
+
+                if (e.key === "ArrowLeft") {
+                    e.preventDefault();
+                    const index = inputs.indexOf(input);
+
+                    if (input.value === "" && fieldsContainer.children.length > 1) {
+                        wrapper.remove();
+                        const newInputs = Array.from(fieldsContainer.querySelectorAll("input"));
+                        const prev = newInputs[Math.max(index - 1, 0)];
+                        if (prev) prev.focus();
+                        return;
+                    }
+
+                    if (index > 0) {
+                        inputs[index - 1]?.focus();
+                    }
                 }
 
                 if (e.key === "Backspace" && input.value === "") {
@@ -141,7 +179,7 @@ class MapEditor {
                     input.style.backgroundColor = this.getColor(e.key);
                 }
 
-                if (e.key === "Delete") {
+                if (e.key === "x") {
                     e.preventDefault();
                     const onlyDigits = input.value.replace(/\D/g, "");
                     input.setAttribute("data-internal", onlyDigits);
@@ -273,11 +311,11 @@ class MapEditor {
         if (letter === "s") return "#E53935"; // solo
 
         if (letter === "k") return "#8BC34A"; // keep until herd-management is almost done
-        if (letter === "d") return "#9575CD"; // done solo difficulty reduction
-        if (letter === "h") return "#FF4081"; // harvested
+        if (letter === "d") return "#78909C"; // done solo difficulty reduction
+        if (letter === "h") return "#9575CD"; // harvested
 
         if (letter === "r") return "#FFC107"; // rare
-        return "#78909C"; // default
+        return "#EFEFEF"; // default
     }
 
     sampleData() {
