@@ -234,76 +234,124 @@ class MapEditor {
     }
 
     render() {
+        if (this.draggingIndex === null) this.renderLabels();
+        else this.renderSingleLabel(this.draggingIndex);
+    }
+
+    renderLabels() {
         const div = document.getElementById("mapLabels");
-        this.container.querySelectorAll(".mapLabel").forEach((el) => el.remove());
+        this.clearLabels(div);
+
         this.data.forEach((item, index) => {
-            const label = document.createElement("div");
-            label.classList.add("mapLabel", "rounded", "px-1");
-
-            const rect = this.mapImage.getBoundingClientRect();
-            const left = item.x * rect.width;
-            const top = item.y * rect.height;
-
+            const label = this.createLabel(item);
             label.style.position = "absolute";
-            label.style.left = `${left}px`;
-            label.style.top = `${top}px`;
-
-            const numbers = item.text.split(",");
-            numbers.forEach((num) => {
-                const numberLabel = document.createElement("span");
-                numberLabel.textContent = num.split(/[a-zA-Z]/)[0];
-                numberLabel.style.color = this.getColor(num);
-                label.appendChild(numberLabel);
-            });
-
-            let clicked = true;
-
-            label.onclick = () => {
-                if (clicked) this.editLabel(index);
-            };
-
-            label.onmousedown = (e) => {
-                e.preventDefault();
-                clicked = true;
-
-                this.draggingIndex = index;
-
-                const rect = this.mapImage.getBoundingClientRect();
-                const labelRect = label.getBoundingClientRect();
-
-                this.dragOffset = {
-                    x: e.clientX - labelRect.left,
-                    y: e.clientY - labelRect.top,
-                };
-
-                const onMouseMove = (moveEvent) => {
-                    clicked = false;
-
-                    if (this.draggingIndex === null) return;
-
-                    const x = (moveEvent.clientX - rect.left - this.dragOffset.x) / rect.width;
-                    const y = (moveEvent.clientY - rect.top - this.dragOffset.y) / rect.height;
-
-                    this.data[this.draggingIndex].x = Math.min(Math.max(x, 0), 1);
-                    this.data[this.draggingIndex].y = Math.min(Math.max(y, 0), 1);
-
-                    this.render();
-                };
-
-                const onMouseUp = () => {
-                    this.draggingIndex = null;
-                    this.saveData();
-                    window.removeEventListener("mousemove", onMouseMove);
-                    window.removeEventListener("mouseup", onMouseUp);
-                };
-
-                window.addEventListener("mousemove", onMouseMove);
-                window.addEventListener("mouseup", onMouseUp);
-            };
-
+            label.setAttribute("data-index", index);
             div.appendChild(label);
+
+            this.positionLabel(label, item);
+            this.attachLabelEvents(label, index);
         });
     }
+
+    renderSingleLabel(index) {
+        const item = this.data[index];
+        const div = document.getElementById("mapLabels");
+        this.clearSingleLabel(index);
+
+        const label = this.createLabel(item);
+        label.style.position = "absolute";
+        label.setAttribute("data-index", index);
+        div.appendChild(label);
+
+        this.positionLabel(label, item);
+        this.attachLabelEvents(label, index);
+    }
+
+    clearSingleLabel(index) {
+        const div = document.getElementById("mapLabels");
+        const label = div.querySelector(`[data-index="${index}"]`);
+        if (label) {
+            label.remove();
+        }
+    }
+
+    clearLabels(div) {
+        div.querySelectorAll(".mapLabel").forEach((el) => el.remove());
+    }
+
+    createLabel(item) {
+        const label = document.createElement("div");
+        label.classList.add("mapLabel", "rounded", "px-1");
+
+        const numbers = item.text.split(",");
+        numbers.forEach((num) => {
+            const numberLabel = document.createElement("span");
+            numberLabel.textContent = num.split(/[a-zA-Z]/)[0];
+            numberLabel.style.color = this.getColor(num);
+            label.appendChild(numberLabel);
+        });
+
+        return label;
+    }
+
+    positionLabel(label, item) {
+        const rect = this.mapImage.getBoundingClientRect();
+        const labelRect = label.getBoundingClientRect();
+
+        const left = Math.min(Math.max(item.x * rect.width, 0), rect.width - labelRect.width);
+        const top = Math.min(Math.max(item.y * rect.height, 0), rect.height - labelRect.height);
+
+        label.style.left = `${left}px`;
+        label.style.top = `${top}px`;
+    }
+
+    attachLabelEvents(label, index) {
+        let clicked = true;
+
+        label.onclick = () => {
+            if (clicked) this.editLabel(index);
+        };
+
+        label.onmousedown = (e) => this.startDrag(e, label, index);
+    }
+
+    startDrag(e, label, index) {
+        e.preventDefault();
+
+        this.draggingIndex = index;
+        const rect = this.mapImage.getBoundingClientRect();
+        const labelRect = label.getBoundingClientRect();
+
+        const onMouseMove = (moveEvent) => {
+            if (this.draggingIndex === null) return;
+
+            const x = (moveEvent.clientX - rect.left - labelRect.width / 2) / rect.width;
+            const y = (moveEvent.clientY - rect.top - labelRect.height / 2) / rect.height;
+
+            this.data[this.draggingIndex].x = Math.min(Math.max(x, 0), 1);
+            this.data[this.draggingIndex].y = Math.min(Math.max(y, 0), 1);
+
+            this.render();
+        };
+
+        const onMouseUp = () => {
+            this.draggingIndex = null;
+            this.saveData();
+            window.removeEventListener("mousemove", onMouseMove);
+            window.removeEventListener("mouseup", onMouseUp);
+        };
+
+        window.addEventListener("mousemove", onMouseMove);
+        window.addEventListener("mouseup", onMouseUp);
+    }
+
+    debounceRender = (() => {
+        let timeout;
+        return () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => this.renderLabels(), 50);
+        };
+    })();
 
     getColor(text) {
         const letter = text[text.length - 1];

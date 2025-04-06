@@ -6,6 +6,7 @@ body {
     padding: 0;
     background-color: #060606;
     color: #efefef;
+    overflow-x: hidden;
 }
 
 #mapWrapper {
