@@ -48,7 +48,12 @@
                         <h3>Keybindings</h3>
                         <ul class="list-unstyled d-flex flex-column gap-2">
                             <li>
-                                <span class="btn-default me-1">←</span><span class="btn-default">→</span> Move through inputs
+                                <span class="btn-default me-1">←</span><span class="btn-default">→</span> Move through
+                                inputs
+                            </li>
+                            <li>
+                                <span class="btn-default me-1">HOME</span><span class="btn-default">END</span> Select
+                                first or last input
                             </li>
                             <li><span class="btn-default">BACKSPACE</span> Delete number</li>
                             <li><span class="btn-default">ESC</span> Cancel</li>
@@ -80,9 +85,7 @@
                 <img id="mapImage" src="https://placehold.co/400" class="w-100 h-auto" alt="map" />
             </div>
             <div id="mapLabels" class="positions-relative overflow-hidden"></div>
-            <div
-                id="mapInformation"
-                class="d-flex flex-sm-row flex-column row-cols-2 justify-content-center align-items-center">
+            <div id="mapInformation" class="d-grid">
                 <div id="mapLegend" class="col d-flex flex-column gap-2 justify-content-center align-items-center p-4">
                     <div class="mb-2">
                         <h3>Legend</h3>

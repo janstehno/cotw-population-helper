@@ -14,16 +14,8 @@ body {
     overflow: hidden;
 }
 
-.mapLabel {
-    display: flex;
-    background-color: #060606;
-    cursor: pointer;
-}
-
-.mapLabel span {
-    font-weight: 600;
-    font-size: 0.8vw;
-    padding: 0.03vw 0.07vw;
+#mapInformation {
+    grid-template-columns: repeat(auto-fit, minmax(50%, 1fr));
 }
 
 #mapControls > * {
@@ -31,14 +23,17 @@ body {
     width: 100%;
 }
 
-#summaryContainer {
-    background: #969696;
-    color: #060606;
+.mapLabel {
+    display: flex;
+    background-color: #060606;
+    cursor: pointer;
+    padding: 0 0.3vw 0 0.43vw;
 }
 
-#summaryBox {
-    max-width: 400px;
-    width: 100%;
+.mapLabel span {
+    font-weight: 600;
+    font-size: 0.9vw;
+    letter-spacing: 0.1rem;
 }
 
 .form-control::placeholder {
@@ -86,31 +81,59 @@ button.btn-outline-secondary:hover {
 }
 
 .btn-g {
-    background-color: #2196f3;
+    background-color: #2196f3 !important;
+}
+
+.active-g {
+    border-color: #134d7c !important;
 }
 
 .btn-s {
-    background-color: #e53935;
+    background-color: #e53935 !important;
+}
+
+.active-s {
+    border-color: #6b1a19 !important;
 }
 
 .btn-k {
-    background-color: #8bc34a;
+    background-color: #8bc34a !important;
+}
+
+.active-k {
+    border-color: #3b5320 !important;
 }
 
 .btn-d {
-    background-color: #78909c;
+    background-color: #78909c !important;
+}
+
+.active-d {
+    border-color: #2c353a !important;
 }
 
 .btn-h {
-    background-color: #9575cd;
+    background-color: #9575cd !important;
+}
+
+.active-h {
+    border-color: #483963 !important;
 }
 
 .btn-r {
-    background-color: #ffc107;
+    background-color: #ffc107 !important;
+}
+
+.active-r {
+    border-color: #886704 !important;
 }
 
 .btn-default {
-    background-color: #efefef;
+    background-color: #efefef !important;
+}
+
+.active-default {
+    border-color: #494949 !important;
 }
 
 #appBanner {
@@ -125,4 +148,39 @@ button.btn-outline-secondary:hover {
 .legendColor {
     width: 20px;
     height: 20px;
+}
+
+.hidden-number-input {
+    width: 32px;
+    height: 32px;
+    overflow: hidden;
+    position: absolute;
+    opacity: 0;
+    z-index: 1;
+}
+
+.visual-code-input {
+    grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));
+    overflow: auto;
+    min-height: 30px;
+    max-height: 180px;
+}
+
+.code-box {
+    width: 32px;
+    height: 32px;
+    border: none;
+    color: #060606 !important;
+    background-color: #efefef;
+}
+
+.code-box.active {
+    border-width: 3px !important;
+    border-style: solid !important;
+}
+
+@media only screen and (max-width: 768px) {
+    #mapInformation {
+        grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+    }
 }

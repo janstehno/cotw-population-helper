@@ -79,144 +79,165 @@ class MapEditor {
 
         fieldsContainer.innerHTML = "";
 
-        const createField = (value = "") => {
-            const wrapper = document.createElement("div");
-            wrapper.classList.add("col", "p-1");
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("number-input-wrapper", "w-100");
 
-            const input = document.createElement("input");
-            input.type = "text";
-            input.maxLength = 1;
-            input.classList.add("info-input", "w-100", "text-center", "border-0", "rounded");
+        const input = document.createElement("input");
+        input.type = "text";
+        input.name = "hidden-number-input";
+        input.inputMode = "numeric";
+        input.autocomplete = "off";
+        input.maxLength = 30;
+        input.classList.add("hidden-number-input");
 
-            const initialNumber = value.match(/^\d+/)?.[0] || "";
-            const initialLetter = value.match(/[a-zA-Z]$/)?.[0] || "";
-            input.value = initialNumber;
-            input.setAttribute("data-internal", initialNumber + initialLetter);
-            input.style.backgroundColor = this.getColor(initialLetter);
+        const visualContainer = document.createElement("div");
+        visualContainer.classList.add("visual-code-input", "w-100", "d-flex", "flex-wrap", "gap-2");
 
-            input.addEventListener("input", () => {
-                const onlyDigits = input.value.replace(/\D/g, "");
-                const currentLetter = input.getAttribute("data-internal").match(/[a-zA-Z]$/)?.[0] || "";
-                input.setAttribute("data-internal", onlyDigits + currentLetter);
-                input.value = onlyDigits;
-                input.style.backgroundColor = this.getColor(currentLetter);
-                if (input.value.length !== 0) {
-                    const newField = createField();
-                    fieldsContainer.appendChild(newField);
-                    setTimeout(() => {
-                        newField.querySelector("input").focus();
-                    }, 0);
+        wrapper.appendChild(input);
+        wrapper.appendChild(visualContainer);
+        fieldsContainer.appendChild(wrapper);
+
+        const allowedLetters = ["g", "s", "k", "d", "h", "r", "x"];
+        let internal = [];
+        let activeIndex = 0;
+
+        const render = () => {
+            visualContainer.innerHTML = "";
+            internal.forEach(({ digit, letter }, index) => {
+                const box = document.createElement("div");
+                box.classList.add("code-box", "rounded", "d-flex", "justify-content-center", "align-items-center");
+                if (index === activeIndex) {
+                    box.classList.add("active", `active-${letter || "default"}`);
                 }
+                box.textContent = digit || "";
+                box.style.backgroundColor = this.getColor(letter);
+                box.title = letter || "";
+                visualContainer.appendChild(box);
             });
 
-            input.addEventListener("keydown", (e) => {
-                const inputs = Array.from(fieldsContainer.querySelectorAll("input"));
-
-                if (e.key === "ArrowRight") {
-                    e.preventDefault();
-                    const index = inputs.indexOf(input);
-
-                    const isLast = index === inputs.length - 1;
-                    const isEmpty = input.value === "";
-
-                    if (isEmpty && isLast) {
-                        return;
-                    }
-
-                    if (isEmpty && inputs.length > 1) {
-                        wrapper.remove();
-                        const newInputs = Array.from(fieldsContainer.querySelectorAll("input"));
-                        const next = newInputs[Math.min(index, newInputs.length - 1)];
-                        if (next) next.focus();
-                        return;
-                    }
-
-                    if (isLast) {
-                        const newField = createField();
-                        fieldsContainer.appendChild(newField);
-                        setTimeout(() => {
-                            newField.querySelector("input").focus();
-                        }, 0);
-                    } else {
-                        inputs[index + 1]?.focus();
-                    }
-                }
-
-                if (e.key === "ArrowLeft") {
-                    e.preventDefault();
-                    const index = inputs.indexOf(input);
-
-                    if (input.value === "" && fieldsContainer.children.length > 1) {
-                        wrapper.remove();
-                        const newInputs = Array.from(fieldsContainer.querySelectorAll("input"));
-                        const prev = newInputs[Math.max(index - 1, 0)];
-                        if (prev) prev.focus();
-                        return;
-                    }
-
-                    if (index > 0) {
-                        inputs[index - 1]?.focus();
-                    }
-                }
-
-                if (e.key === "Backspace" && input.value === "") {
-                    const wrappers = Array.from(fieldsContainer.children);
-                    const index = wrappers.indexOf(wrapper);
-                    if (wrappers.length > 1) {
-                        e.preventDefault();
-                        wrapper.remove();
-                        const newWrappers = Array.from(fieldsContainer.children);
-                        const previous = newWrappers[Math.max(index - 1, 0)];
-                        if (previous) previous.querySelector("input").focus();
-                    }
-                }
-
-                const allowedLetters = ["g", "s", "k", "d", "h", "r"];
-                if (allowedLetters.includes(e.key)) {
-                    e.preventDefault();
-                    const onlyDigits = input.value.replace(/\D/g, "");
-                    input.setAttribute("data-internal", onlyDigits + e.key);
-                    input.style.backgroundColor = this.getColor(e.key);
-                }
-
-                if (e.key === "x") {
-                    e.preventDefault();
-                    const onlyDigits = input.value.replace(/\D/g, "");
-                    input.setAttribute("data-internal", onlyDigits);
-                    input.style.backgroundColor = this.getColor("");
-                }
-
-                if (e.key === "Escape") {
-                    e.preventDefault();
-                    modal.style.display = "none";
-                }
-
-                if (e.key === "Enter") {
-                    e.preventDefault();
-                    saveBtn.click();
-                }
-            });
-
-            wrapper.appendChild(input);
-            return wrapper;
+            if (activeIndex === internal.length) {
+                const active = document.createElement("div");
+                active.classList.add(
+                    "code-box",
+                    "rounded",
+                    "d-flex",
+                    "justify-content-center",
+                    "align-items-center",
+                    "active",
+                    "active-default"
+                );
+                visualContainer.appendChild(active);
+            }
         };
 
-        initialValues.forEach((val) => fieldsContainer.appendChild(createField(val)));
-        if (initialValues.length === 0) {
-            fieldsContainer.appendChild(createField());
+        input.addEventListener("input", () => {
+            const raw = input.value.replace(/\D/g, "");
+            for (let digit of raw) {
+                if (internal[activeIndex]) {
+                    internal[activeIndex].digit = digit;
+                } else {
+                    internal.push({ digit, letter: "x" });
+                }
+                activeIndex = Math.min(activeIndex + 1, internal.length);
+            }
+            input.value = "";
+            render();
+        });
+
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Backspace") {
+                if (internal.length === 0) return;
+
+                internal.splice(activeIndex, 1);
+                activeIndex = Math.max(0, activeIndex - 1);
+
+                e.preventDefault();
+                render();
+                return;
+            }
+
+            if (e.key === "ArrowRight") {
+                e.preventDefault();
+                activeIndex = Math.min(activeIndex + 1, internal.length);
+                render();
+                return;
+            }
+
+            if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                activeIndex = Math.max(activeIndex - 1, 0);
+                render();
+                return;
+            }
+
+            if (e.key === "Home") {
+                activeIndex = 0;
+                render();
+                e.preventDefault();
+                return;
+            }
+
+            if (e.key === "End") {
+                activeIndex = internal.length;
+                render();
+                e.preventDefault();
+                return;
+            }
+
+            if (allowedLetters.includes(e.key)) {
+                if (internal[activeIndex]) {
+                    internal[activeIndex].letter = e.key;
+                } else {
+                    internal.splice(activeIndex, 0, { digit: "", letter: e.key });
+                }
+                render();
+                e.preventDefault();
+                return;
+            }
+
+            if (e.key === "Escape") {
+                e.preventDefault();
+                modal.style.display = "none";
+            }
+
+            if (e.key === "Enter") {
+                e.preventDefault();
+                saveBtn.click();
+            }
+        });
+
+        visualContainer.addEventListener("click", () => input.focus());
+
+        for (let val of initialValues) {
+            const match = val.match(/^(\d+)([a-zA-Z]?)$/);
+            if (match) {
+                const digits = match[1];
+                const letter = match[2] || "";
+                for (let ch of digits) {
+                    internal.push({ digit: ch, letter });
+                }
+            }
         }
 
-        setTimeout(() => {
-            const firstInput = fieldsContainer.querySelector("input");
-            if (firstInput) firstInput.focus();
-        }, 0);
+        activeIndex = Math.max(0, Math.min(activeIndex, internal.length));
+        render();
+        setTimeout(() => input.focus(), 0);
 
         saveBtn.onclick = () => {
-            const values = Array.from(fieldsContainer.querySelectorAll("input"))
-                .filter((input) => input.value)
-                .map((input) => input.getAttribute("data-internal") || "")
-                .map((v) => v.trim())
-                .filter((v) => v);
+            const values = [];
+            let buffer = "";
+            let currentLetter = "";
+            for (const item of internal) {
+                if (currentLetter && currentLetter !== item.letter) {
+                    values.push(buffer + currentLetter);
+                    buffer = "";
+                }
+                buffer += item.digit;
+                currentLetter = item.letter;
+            }
+            if (buffer) {
+                values.push(buffer + currentLetter);
+            }
             modal.style.display = "none";
             callback(values);
         };
@@ -281,7 +302,7 @@ class MapEditor {
 
     createLabel(item) {
         const label = document.createElement("div");
-        label.classList.add("mapLabel", "rounded", "px-1");
+        label.classList.add("mapLabel", "rounded");
 
         const numbers = item.text.split(",");
         numbers.forEach((num) => {
@@ -355,15 +376,23 @@ class MapEditor {
 
     getColor(text) {
         const letter = text[text.length - 1];
-        if (letter === "g") return "#2196F3"; // group member
-        if (letter === "s") return "#E53935"; // solo
-
-        if (letter === "k") return "#8BC34A"; // keep until herd-management is almost done
-        if (letter === "d") return "#78909C"; // done solo difficulty reduction
-        if (letter === "h") return "#9575CD"; // harvested
-
-        if (letter === "r") return "#FFC107"; // rare
-        return "#EFEFEF"; // default
+        switch (letter) {
+            case "g":
+                return "#2196F3";
+            case "s":
+                return "#E53935";
+            case "k":
+                return "#8BC34A";
+            case "d":
+                return "#78909C";
+            case "h":
+                return "#9575CD";
+            case "r":
+                return "#FFC107";
+            case "x":
+            default:
+                return "#EFEFEF";
+        }
     }
 
     sampleData() {
