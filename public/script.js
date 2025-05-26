@@ -97,7 +97,7 @@ class MapEditor {
         wrapper.appendChild(visualContainer);
         fieldsContainer.appendChild(wrapper);
 
-        const allowedLetters = ["g", "s", "k", "d", "h", "r", "x"];
+        const allowedLetters = ["r", "o", "y", "g", "t", "b", "d", "v", "w", "q", "x"];
         let internal = [];
         let activeIndex = 0;
 
@@ -377,18 +377,26 @@ class MapEditor {
     getColor(text) {
         const letter = text[text.length - 1];
         switch (letter) {
-            case "g":
-                return "#2196F3";
-            case "s":
-                return "#E53935";
-            case "k":
-                return "#8BC34A";
-            case "d":
-                return "#78909C";
-            case "h":
-                return "#9575CD";
             case "r":
+                return "#E53935";
+            case "o":
+                return "#FF5722";
+            case "y":
                 return "#FFC107";
+            case "g":
+                return "#8BC34A";
+            case "t":
+                return "#26C6DA";
+            case "b":
+                return "#2196F3";
+            case "d":
+                return "#3F51B5";
+            case "v":
+                return "#9575CD";
+            case "w":
+                return "#8D6E63";
+            case "q":
+                return "#78909C";
             case "x":
             default:
                 return "#EFEFEF";

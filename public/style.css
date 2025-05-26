@@ -80,52 +80,84 @@ button.btn-outline-secondary:hover {
     font-weight: 600;
 }
 
-.btn-g {
-    background-color: #2196f3 !important;
-}
-
-.active-g {
-    border-color: #134d7c !important;
-}
-
-.btn-s {
+.btn-r {
     background-color: #e53935 !important;
 }
 
-.active-s {
+.active-r {
     border-color: #6b1a19 !important;
 }
 
-.btn-k {
-    background-color: #8bc34a !important;
+.btn-o {
+    background-color: #ff5722 !important;
 }
 
-.active-k {
-    border-color: #3b5320 !important;
+.active-o {
+    border-color: #8b3014 !important;
 }
 
-.btn-d {
-    background-color: #78909c !important;
-}
-
-.active-d {
-    border-color: #2c353a !important;
-}
-
-.btn-h {
-    background-color: #9575cd !important;
-}
-
-.active-h {
-    border-color: #483963 !important;
-}
-
-.btn-r {
+.btn-y {
     background-color: #ffc107 !important;
 }
 
-.active-r {
+.active-y {
     border-color: #886704 !important;
+}
+
+.btn-g {
+    background-color: #8bc34a !important;
+}
+
+.active-g {
+    border-color: #3b5320 !important;
+}
+
+.btn-t {
+    background-color: #26c6da !important;
+}
+
+.active-t {
+    border-color: #13626d !important;
+}
+
+.btn-b {
+    background-color: #2196f3 !important;
+}
+
+.active-b {
+    border-color: #134d7c !important;
+}
+
+.btn-d {
+    background-color: #3f51b5 !important;
+}
+
+.active-d {
+    border-color: #1e2657 !important;
+}
+
+.btn-v {
+    background-color: #9575cd !important;
+}
+
+.active-v {
+    border-color: #483963 !important;
+}
+
+.btn-w {
+    background-color: #8d6e63 !important;
+}
+
+.active-w {
+    border-color: #3d302b !important;
+}
+
+.btn-q {
+    background-color: #78909c !important;
+}
+
+.active-q {
+    border-color: #2c353a !important;
 }
 
 .btn-default {
@@ -133,7 +165,7 @@ button.btn-outline-secondary:hover {
 }
 
 .active-default {
-    border-color: #494949 !important;
+    border-color: #383838 !important;
 }
 
 #appBanner {
